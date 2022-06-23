@@ -1,32 +1,80 @@
-# Timer - OnePage Bootstrap Business Template
+# Timer Free Bootstrap agency Template
 
-Timer- Superfine is bootstrap based HTML5 responsive multipage agency template built using HTML5/CSS3 features and suitable for creative companies, agencies, and freelancers which need a professional way to showcase their projects, services, and sell their products. Timer has been designed and built with a ‘user first’ approach; Timer offers a beautifully elegant, simple and well-spaced template that follows the principles of design. This flexible template uses fresh and clean design and allows to change it looks to your liking in one click.
+![timer](https://demo.themefisher.com/thumbnails/timer.png)
 
-<img src="https://cloud.githubusercontent.com/assets/10640964/24957658/3a221bf4-1fae-11e7-8983-27e7848a626b.jpg" alt="Free bootstrap business template by themefisher">
+👉🏻[View Live Preview](https://demo.themefisher.com/timer/)
 
-**NOTE:** Please remember to **STAR** this project and **FOLLOW** [my Github](https://github.com/themefisher) to keep you update with this template.
+<!-- download -->
+## Download And installation
 
-## Demo & Download 
+Download this template from [Github](https://github.com/themefisher/timer/archive/main.zip)
 
-A fully functional demo is available at <a href="http://demo.themefisher.com/demos/?theme=timer">Demo</a>
-You can visit our website to download this theme <a href="https://themefisher.com/products/timer-responsive-multipage-agency-template/">Download Now</a>
- 
+<!-- installation -->
+### Basic Usages
 
+After downloading the template, you can simply edit the HTML and CSS files from the `theme` folder. To preview the changes you make to the code, you can open the index.html file in your web browser.
 
-## Bugs Reports
+### Advanced Usage
 
-Have a bug or a feature request? Please open a new issue.
+For advanced usage, you have some prerequisites to install. Then you can run it on your localhost. You can view the package.json file to see which scripts are included.
 
-## Copyright and license
+#### Install prerequisites (once for a machine)
 
-Copyright 2017 themefisher.com, <a target="_blank" href="https://themefisher.com/license">License</a>
+* **Node Installation:** [Install node js](https://nodejs.org/en/download/)
+* **Gulp Installation:** Install gulp globally from your terminal
 
-## Support Themefisher Development
-This template is a MIT licensed open source project and completely free to use. However, the amount of effort needed to maintain and develop new features for the project is not sustainable without proper financial backing. You can support development by buying one of our [premium templates](https://themefisher.com/premium-templates/).
+```
+npm install --global gulp-cli
+```
 
+Or visit the original [Gulp docs](https://gulpjs.com/docs/en/getting-started/quick-start)
 
-### Check out our FREE Bootstrap & HTML5 Templates
-Get More FREE Bootstrap templates from our store <a href="https://themefisher.com/free-bootstrap-templates">Bootstrap Templates Store</a>
-And if you want FREE HTML5 Templates then please visit our listing content <a href="https://themefisher.com/best-free-html5-templates-2016/">HTML5 Templates</a>
-Visit Our Website For More Amazing Works
-<a href="https://themefisher.com">Website</a>
+#### Local setup
+
+After successfully installing those dependencies, open this theme with any IDE [[VS Code](https://code.visualstudio.com/) recommended], and then open the internal terminal of IDM [vs code shortcut <code>ctrl/cmd+\`</code>]
+
+* Install dependencies
+
+```
+npm install
+```
+
+* Run locally
+
+```
+npm run dev
+```
+
+After that, it will open up a preview of the template in your default browser, watch for changes to source files, and live reload the browser when changes are saved.
+
+#### Production Build
+
+After finishing all the customization, you can create a production build by running this command.
+
+```
+npm run build
+```
+
+Now you get a `theme` folder that has all the changes you have made. you can use this folder as your main theme.
+
+👉🏻 [visit documentation](https://docs.themefisher.com/timer/)
+
+<!-- reporting issue -->
+## Reporting Issues
+
+We use GitHub Issues as the official bug tracker for the timer Template. Please Search [existing issues](https://github.com/themefisher/timer/issues). It’s possible someone has already reported the same problem.
+If your problem or idea has not been addressed yet, feel free to [open a new issue](https://github.com/themefisher/timer/issues).
+
+<!-- support -->
+## Technical Support or Questions (Paid)
+
+If you have questions or need help integrating the product please [contact us](mailto:mehedi@themefisher.com) instead of opening an issue.
+
+<!-- licence -->
+## License
+
+Copyright (c) 2016 - Present, Designed & Developed by [Themefisher](https://themefisher.com)
+
+**Code License:** Released under the [MIT](https://github.com/themefisher/timer/blob/main/LICENSE) license.
+
+**Image license:** The images are only for demonstration purposes. They have their license, we don't have permission to share those images.
