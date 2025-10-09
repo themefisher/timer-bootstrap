@@ -3,53 +3,56 @@
 const sass = require("gulp-sass")(require("sass"));
 const gulp = require("gulp");
 const gutil = require("gulp-util");
+const jshint = require("gulp-jshint");
 const sourcemaps = require("gulp-sourcemaps");
 const fileinclude = require("gulp-file-include");
 const autoprefixer = require("gulp-autoprefixer");
 const bs = require("browser-sync").create();
 const rimraf = require("rimraf");
+const gm = require("gulp-gm");
 const comments = require("gulp-header-comment");
-const jshint = require("gulp-jshint");
-const notify = require("gulp-notify");
-const plumber = require("gulp-plumber");
 
 var path = {
   src: {
+    // source paths
     html: "source/*.html",
-    others: "source/*.+(php|ico|png)",
-    htminc: "source/partials/**/*.htm",
+    htminc: "source/partials/**/*",
     incdir: "source/partials/",
-    plugins: "source/plugins/**/*.*",
+    plugins: "source/plugins/**/*",
     js: "source/js/*.js",
     scss: "source/scss/**/*.scss",
-    images: "source/images/**/*.+(png|jpg|gif|svg)",
+    images: "source/images/**/*.+(png|jpg|jpeg|gif|svg|webp|ico)",
+    blur: "source/images/**/*.+(jpg|jpeg|webp)",
     fonts: "source/fonts/**/*.+(eot|ttf|woff|woff2|otf)",
+    static: "source/static/**/*",
   },
   build: {
-    dirBuild: "theme/",
-    dirDev: "theme/",
+    // build paths
+    dir: "theme/",
   },
 };
 
 // HTML
-gulp.task("html:build", function () {
+gulp.task("html", function () {
   return gulp
     .src(path.src.html)
-    .pipe(customPlumber("Error Running html-include"))
     .pipe(
       fileinclude({
         basepath: path.src.incdir,
+        context: {
+          version: "premium",
+        },
       })
     )
     .pipe(
       comments(`
     WEBSITE: https://themefisher.com
     TWITTER: https://twitter.com/themefisher
-    FACEBOOK: https://www.facebook.com/themefisher
+    FACEBOOK: https://facebook.com/themefisher
     GITHUB: https://github.com/themefisher/
     `)
     )
-    .pipe(gulp.dest(path.build.dirDev))
+    .pipe(gulp.dest(path.build.dir))
     .pipe(
       bs.reload({
         stream: true,
@@ -58,7 +61,7 @@ gulp.task("html:build", function () {
 });
 
 // SCSS
-gulp.task("scss:build", function () {
+gulp.task("scss", function () {
   return gulp
     .src(path.src.scss)
     .pipe(sourcemaps.init())
@@ -73,11 +76,11 @@ gulp.task("scss:build", function () {
       comments(`
     WEBSITE: https://themefisher.com
     TWITTER: https://twitter.com/themefisher
-    FACEBOOK: https://www.facebook.com/themefisher
+    FACEBOOK: https://facebook.com/themefisher
     GITHUB: https://github.com/themefisher/
     `)
     )
-    .pipe(gulp.dest(path.build.dirDev + "css/"))
+    .pipe(gulp.dest(path.build.dir + "css/"))
     .pipe(
       bs.reload({
         stream: true,
@@ -85,31 +88,26 @@ gulp.task("scss:build", function () {
     );
 });
 
+gulp.task("scss-files", function () {
+  return gulp.src(path.src.scss).pipe(gulp.dest(path.build.dir + "scss/"));
+});
+
 // Javascript
-gulp.task("js:build", function () {
+gulp.task("js", function () {
   return gulp
     .src(path.src.js)
     .pipe(jshint("./.jshintrc"))
-    .pipe(
-      notify(function (file) {
-        if (!file.jshint.success) {
-          return (
-            file.relative + " (" + file.jshint.results.length + " errors)\n"
-          );
-        }
-      })
-    )
     .pipe(jshint.reporter("jshint-stylish"))
     .on("error", gutil.log)
     .pipe(
       comments(`
-  WEBSITE: https://themefisher.com
-  TWITTER: https://twitter.com/themefisher
-  FACEBOOK: https://www.facebook.com/themefisher
-  GITHUB: https://github.com/themefisher/
-  `)
+    WEBSITE: https://themefisher.com
+    TWITTER: https://twitter.com/themefisher
+    FACEBOOK: https://facebook.com/themefisher
+    GITHUB: https://github.com/themefisher/
+    `)
     )
-    .pipe(gulp.dest(path.build.dirDev + "js/"))
+    .pipe(gulp.dest(path.build.dir + "js/"))
     .pipe(
       bs.reload({
         stream: true,
@@ -117,11 +115,23 @@ gulp.task("js:build", function () {
     );
 });
 
-// Images
-gulp.task("images:build", function () {
+// Image blur
+gulp.task("images-blur", function () {
+  return gulp
+    .src(path.src.blur)
+    .pipe(
+      gm(function (gmfile) {
+        return gmfile.blur(10, 10);
+      })
+    )
+    .pipe(gulp.dest(path.build.dir + "images/"));
+});
+
+// image build
+gulp.task("images", function () {
   return gulp
     .src(path.src.images)
-    .pipe(gulp.dest(path.build.dirDev + "images/"))
+    .pipe(gulp.dest(path.build.dir + "images/"))
     .pipe(
       bs.reload({
         stream: true,
@@ -130,10 +140,10 @@ gulp.task("images:build", function () {
 });
 
 // fonts
-gulp.task("fonts:build", function () {
+gulp.task("fonts", function () {
   return gulp
     .src(path.src.fonts)
-    .pipe(gulp.dest(path.build.dirDev + "fonts/"))
+    .pipe(gulp.dest(path.build.dir + "fonts/"))
     .pipe(
       bs.reload({
         stream: true,
@@ -142,10 +152,10 @@ gulp.task("fonts:build", function () {
 });
 
 // Plugins
-gulp.task("plugins:build", function () {
+gulp.task("plugins", function () {
   return gulp
     .src(path.src.plugins)
-    .pipe(gulp.dest(path.build.dirDev + "plugins/"))
+    .pipe(gulp.dest(path.build.dir + "plugins/"))
     .pipe(
       bs.reload({
         stream: true,
@@ -153,55 +163,43 @@ gulp.task("plugins:build", function () {
     );
 });
 
-// Other files like favicon, php, sourcele-icon on root directory
-gulp.task("others:build", function () {
-  return gulp.src(path.src.others).pipe(gulp.dest(path.build.dirDev));
+// static files
+gulp.task("static", function () {
+  return gulp.src(path.src.static).pipe(gulp.dest(path.build.dir));
 });
 
-// Clean Build Folder
+// Clean Theme Folder
 gulp.task("clean", function (cb) {
   rimraf("./theme", cb);
 });
 
-// Error Message Show
-function customPlumber(errTitle) {
-  return plumber({
-    errorHandler: notify.onError({
-      // Customizing error title
-      title: errTitle || "Error running Gulp",
-      message: "Error: <%= error.message %>",
-      sound: "Glass",
-    }),
-  });
-}
-
 // Watch Task
-gulp.task("watch:build", function () {
-  gulp.watch(path.src.html, gulp.series("html:build"));
-  gulp.watch(path.src.htminc, gulp.series("html:build"));
-  gulp.watch(path.src.scss, gulp.series("scss:build"));
-  gulp.watch(path.src.js, gulp.series("js:build"));
-  gulp.watch(path.src.images, gulp.series("images:build"));
-  gulp.watch(path.src.fonts, gulp.series("fonts:build"));
-  gulp.watch(path.src.plugins, gulp.series("plugins:build"));
+gulp.task("watch", function () {
+  gulp.watch(path.src.html, gulp.series("html"));
+  gulp.watch(path.src.htminc, gulp.series("html"));
+  gulp.watch(path.src.scss, gulp.series("scss"));
+  gulp.watch(path.src.js, gulp.series("js"));
+  gulp.watch(path.src.images, gulp.series("images"));
+  gulp.watch(path.src.fonts, gulp.series("fonts"));
+  gulp.watch(path.src.plugins, gulp.series("plugins"));
 });
 
-// Dev Task
+// dev Task
 gulp.task(
   "default",
   gulp.series(
     "clean",
-    "html:build",
-    "js:build",
-    "scss:build",
-    "images:build",
-    "fonts:build",
-    "plugins:build",
-    "others:build",
-    gulp.parallel("watch:build", function () {
+    "html",
+    "js",
+    "scss",
+    "images",
+    "fonts",
+    "plugins",
+    "static",
+    gulp.parallel("watch", function () {
       bs.init({
         server: {
-          baseDir: path.build.dirDev,
+          baseDir: path.build.dir,
         },
       });
     })
@@ -212,11 +210,36 @@ gulp.task(
 gulp.task(
   "build",
   gulp.series(
-    "html:build",
-    "js:build",
-    "scss:build",
-    "images:build",
-    "fonts:build",
-    "plugins:build"
+    "clean",
+    "html",
+    "js",
+    "scss",
+    "images",
+    "fonts",
+    "plugins",
+    "static"
   )
+);
+
+// Build Download Files Task
+gulp.task(
+  "download",
+  gulp.series(
+    "clean",
+    "html",
+    "js",
+    "scss",
+    "scss-files",
+    "images",
+    "images-blur",
+    "fonts",
+    "plugins",
+    "static"
+  )
+);
+
+// Deploy Task
+gulp.task(
+  "deploy",
+  gulp.series("html", "js", "scss", "images", "fonts", "plugins", "static")
 );
