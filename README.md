@@ -1,6 +1,6 @@
 # Timer Free Bootstrap agency Template
 
-![timer](https://demo.themefisher.com/thumbnails/timer.png)
+![timer](https://assets.teamosis.com/thumbs/timer.png)
 
 👉🏻[View Live Preview](https://demo.themefisher.com/timer/)
 
